@@ -1,0 +1,58 @@
+name: TempConverter CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: tempconverter
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+
+    env:
+      DB_USER: user
+      DB_PASS: password
+      DB_HOST: 127.0.0.1
+      DB_NAME: tempconverter
+
+      STUDENT: Antonela Abicic
+      COLLEGE: Algebra University College
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Wait for MySQL
+        run: sleep 20
+
+      - name: Run tests
+        run: |
+          python -m pytest -v
+
+      - name: Build Docker image
+        run: |
+          docker build -t tempconverter:latest .

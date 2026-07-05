@@ -1,12 +1,12 @@
 import pytest, os
 
-os.environ["DB_USER"] = "user"
-os.environ["DB_PASS"] = "password"
-os.environ["DB_HOST"] = "localhost"
-os.environ["DB_NAME"] = "tempconverter"
+os.environ.setdefault("DB_USER", "user")
+os.environ.setdefault("DB_PASS", "password")
+os.environ.setdefault("DB_HOST", "localhost")
+os.environ.setdefault("DB_NAME", "tempconverter")
 
-os.environ["STUDENT"] = "Antonela Abicic"
-os.environ["COLLEGE"] = "Algebra University College"
+os.environ.setdefault("STUDENT", "Antonela Abicic")
+os.environ.setdefault("COLLEGE", "Algebra University College")
 
 from app import app
 
