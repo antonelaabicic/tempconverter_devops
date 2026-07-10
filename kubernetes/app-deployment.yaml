@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: tempconverter
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: tempconverter
+
+  template:
+    metadata:
+      labels:
+        app: tempconverter
+
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - tempconverter
+            topologyKey: kubernetes.io/hostname
+
+      containers:
+      - name: tempconverter
+        image: docker.io/aabici11/tempconverter:dev
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_HOST
+          value: mysql
+        - name: DB_NAME
+          value: tempconverter
+        - name: DB_USER
+          value: user
+        - name: DB_PASS
+          value: password
+        - name: STUDENT
+          value: Antonela Abicic
+        - name: COLLEGE
+          value: Algebra University College
